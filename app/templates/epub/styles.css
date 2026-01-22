@@ -1,0 +1,130 @@
+/* EPUB Stylesheet for YouTube Transcript */
+
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1em;
+    line-height: 1.6;
+    margin: 5%;
+    color: #333;
+}
+
+h1 {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    color: #1a1a1a;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    color: #2c2c2c;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.3em;
+}
+
+h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    color: #444;
+}
+
+p {
+    margin-bottom: 1em;
+    text-align: justify;
+}
+
+.cover {
+    text-align: center;
+    padding-top: 20%;
+}
+
+.cover img {
+    max-width: 80%;
+    margin-bottom: 2em;
+}
+
+.cover .title {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.cover .channel {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 1em;
+}
+
+.cover .duration {
+    font-size: 1em;
+    color: #888;
+}
+
+.meta-info {
+    background-color: #f5f5f5;
+    padding: 1em;
+    border-radius: 5px;
+    margin: 1em 0;
+}
+
+.meta-info p {
+    margin: 0.3em 0;
+}
+
+.summary-box {
+    background-color: #f0f7ff;
+    border-left: 4px solid #3498db;
+    padding: 1em;
+    margin: 1em 0;
+}
+
+.chapter-summary {
+    background-color: #fff9e6;
+    border-left: 4px solid #f39c12;
+    padding: 1em;
+    margin: 1em 0;
+    font-style: italic;
+}
+
+.key-takeaways {
+    background-color: #e8f5e9;
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 5px;
+}
+
+.key-takeaways ul {
+    margin: 0;
+    padding-left: 1.5em;
+}
+
+.key-takeaways li {
+    margin-bottom: 0.5em;
+}
+
+.timestamp {
+    font-size: 0.9em;
+    color: #666;
+    font-family: monospace;
+    margin-bottom: 1em;
+}
+
+.transcript {
+    margin-top: 1em;
+}
+
+.transcript p {
+    text-indent: 0;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 2em 0;
+}

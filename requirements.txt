@@ -1,0 +1,10 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+youtube-transcript-api>=0.6.3
+pytubefix>=10.3.0
+openai>=1.60.0
+tiktoken>=0.8.0
+EbookLib>=0.18
+sse-starlette>=2.2.0
+python-dotenv>=1.0.0
+aiofiles>=24.1.0

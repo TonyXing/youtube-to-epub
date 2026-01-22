@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube to EPUB Converter</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>YouTube to EPUB Converter</h1>
+            <p class="subtitle">Convert YouTube videos to readable EPUB books with AI summaries</p>
+        </header>
+
+        <main>
+            <!-- URL Input Section -->
+            <section class="input-section">
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="url-input"
+                        placeholder="Paste YouTube URL here..."
+                        autocomplete="off"
+                    >
+                    <button id="preview-btn" class="btn btn-secondary">Preview</button>
+                    <button id="convert-btn" class="btn btn-primary" disabled>Convert</button>
+                </div>
+                <p class="hint">Supports youtube.com/watch and youtu.be links</p>
+            </section>
+
+            <!-- Preview Section -->
+            <section id="preview-section" class="preview-section hidden">
+                <div class="preview-card">
+                    <img id="preview-thumbnail" src="" alt="Video thumbnail">
+                    <div class="preview-info">
+                        <h2 id="preview-title"></h2>
+                        <p class="channel" id="preview-channel"></p>
+                        <div class="meta">
+                            <span id="preview-duration"></span>
+                            <span id="preview-chapters"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Progress Section -->
+            <section id="progress-section" class="progress-section hidden">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span id="progress-message">Starting...</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Download Section -->
+            <section id="download-section" class="download-section hidden">
+                <div class="success-message">
+                    <span class="success-icon">&#10003;</span>
+                    <p>Your EPUB is ready!</p>
+                </div>
+                <button id="download-btn" class="btn btn-primary btn-large">Download EPUB</button>
+                <button id="new-conversion-btn" class="btn btn-secondary">Convert Another Video</button>
+            </section>
+
+            <!-- Error Section -->
+            <section id="error-section" class="error-section hidden">
+                <div class="error-message">
+                    <span class="error-icon">&#10007;</span>
+                    <p id="error-text">An error occurred</p>
+                </div>
+                <button id="retry-btn" class="btn btn-secondary">Try Again</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>Powered by OpenAI GPT-4o-mini</p>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
