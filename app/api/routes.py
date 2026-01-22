@@ -1,5 +1,6 @@
 import asyncio
 import uuid
+import traceback
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, BackgroundTasks
@@ -239,6 +240,9 @@ async def run_conversion(job_id: str, url: str):
         )
 
     except YouTubeServiceError as e:
+        print(f"[ERROR] YouTube service error: {e}")
         await progress_service.set_error(job_id, str(e))
     except Exception as e:
+        print(f"[ERROR] Conversion failed: {e}")
+        traceback.print_exc()
         await progress_service.set_error(job_id, f"Conversion failed: {str(e)}")

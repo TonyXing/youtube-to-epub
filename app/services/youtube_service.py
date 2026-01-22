@@ -110,37 +110,26 @@ async def get_video_preview(url: str) -> VideoPreview:
 async def get_transcript(video_id: str) -> list[TranscriptSegment]:
     """Fetch transcript for a video."""
     try:
-        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+        # New API in youtube-transcript-api v1.x - instance-based
+        api = YouTubeTranscriptApi()
 
-        # Try to get manually created transcript first, then auto-generated
-        transcript = None
+        # Try English variants, then fall back to any available
         try:
-            transcript = transcript_list.find_manually_created_transcript(['en'])
+            transcript_data = api.fetch(video_id, languages=['en', 'en-US', 'en-GB'])
         except:
-            try:
-                transcript = transcript_list.find_generated_transcript(['en'])
-            except:
-                # Try any available transcript
-                for t in transcript_list:
-                    transcript = t
-                    break
-
-        if transcript is None:
-            raise TranscriptNotAvailableError("No transcript available")
-
-        # Fetch the actual transcript data
-        transcript_data = transcript.fetch()
+            # Fall back to any available transcript
+            transcript_list = api.list(video_id)
+            transcript = next(iter(transcript_list))
+            transcript_data = transcript.fetch()
 
         return [
             TranscriptSegment(
-                text=segment['text'],
-                start=segment['start'],
-                duration=segment['duration'],
+                text=segment.text,
+                start=segment.start,
+                duration=segment.duration,
             )
             for segment in transcript_data
         ]
-    except TranscriptNotAvailableError:
-        raise
     except Exception as e:
         raise TranscriptNotAvailableError(f"Failed to fetch transcript: {str(e)}")
 
