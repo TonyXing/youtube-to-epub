@@ -1,15 +1,26 @@
 import asyncio
 import json
 import tiktoken
-from openai import AsyncOpenAI
+from openai import AsyncAzureOpenAI
 
 from app.config import (
-    OPENAI_API_KEY,
-    OPENAI_MODEL,
+    AZURE_OPENAI_ENDPOINT,
+    AZURE_OPENAI_API_KEY,
+    AZURE_OPENAI_DEPLOYMENT,
+    AZURE_OPENAI_API_VERSION,
     MAX_TOKENS_PER_CHUNK,
     TOKEN_OVERLAP,
 )
 from app.models.schemas import VideoMetadata, VideoChapter, OverallSummary
+
+
+def get_azure_client() -> AsyncAzureOpenAI:
+    """Create Azure OpenAI client."""
+    return AsyncAzureOpenAI(
+        azure_endpoint=AZURE_OPENAI_ENDPOINT,
+        api_key=AZURE_OPENAI_API_KEY,
+        api_version=AZURE_OPENAI_API_VERSION,
+    )
 
 
 # Initialize tiktoken encoder
@@ -48,7 +59,7 @@ async def generate_overall_summary(
     full_transcript: str,
 ) -> OverallSummary:
     """Generate overall video summary with key takeaways."""
-    client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+    client = get_azure_client()
 
     # Chunk transcript if needed
     chunks = chunk_text(full_transcript)
@@ -87,7 +98,7 @@ Respond with ONLY valid JSON in this exact format:
 }}"""
 
     response = await client.chat.completions.create(
-        model=OPENAI_MODEL,
+        model=AZURE_OPENAI_DEPLOYMENT,
         messages=[
             {"role": "system", "content": "You are an expert content summarizer. Create clear, informative summaries. Respond only with valid JSON."},
             {"role": "user", "content": prompt},
@@ -118,7 +129,7 @@ Respond with ONLY valid JSON in this exact format:
         )
 
 
-async def _summarize_chunk(client: AsyncOpenAI, chunk: str, index: int, total: int) -> str:
+async def _summarize_chunk(client: AsyncAzureOpenAI, chunk: str, index: int, total: int) -> str:
     """Summarize a single chunk of text."""
     prompt = f"""Summarize this portion of a video transcript (part {index + 1} of {total}).
 Focus on the key points and main ideas.
@@ -129,7 +140,7 @@ Transcript:
 Provide a concise summary (2-3 paragraphs)."""
 
     response = await client.chat.completions.create(
-        model=OPENAI_MODEL,
+        model=AZURE_OPENAI_DEPLOYMENT,
         messages=[
             {"role": "system", "content": "You are an expert content summarizer. Create clear, informative summaries."},
             {"role": "user", "content": prompt},
@@ -142,7 +153,7 @@ Provide a concise summary (2-3 paragraphs)."""
 
 async def generate_chapter_summary(chapter: VideoChapter) -> str:
     """Generate a summary for a single chapter."""
-    client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+    client = get_azure_client()
 
     # Handle long chapter transcripts
     transcript = chapter.transcript
@@ -160,7 +171,7 @@ Transcript:
 Provide a concise summary (1-2 paragraphs) capturing the main points of this chapter."""
 
     response = await client.chat.completions.create(
-        model=OPENAI_MODEL,
+        model=AZURE_OPENAI_DEPLOYMENT,
         messages=[
             {"role": "system", "content": "You are an expert content summarizer. Create clear, informative chapter summaries."},
             {"role": "user", "content": prompt},

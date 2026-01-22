@@ -7,6 +7,7 @@ const progressSection = document.getElementById('progress-section');
 const downloadSection = document.getElementById('download-section');
 const errorSection = document.getElementById('error-section');
 const downloadBtn = document.getElementById('download-btn');
+const readBtn = document.getElementById('read-btn');
 const newConversionBtn = document.getElementById('new-conversion-btn');
 const retryBtn = document.getElementById('retry-btn');
 
@@ -25,10 +26,21 @@ const progressPercent = document.getElementById('progress-percent');
 // Error elements
 const errorText = document.getElementById('error-text');
 
+// Reader elements
+const readerModal = document.getElementById('reader-modal');
+const readerTitle = document.getElementById('reader-title');
+const readerContent = document.getElementById('reader-content');
+const closeReaderBtn = document.getElementById('close-reader-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const tocSelect = document.getElementById('toc-select');
+
 // State
 let currentJobId = null;
 let currentUrl = null;
 let eventSource = null;
+let book = null;
+let rendition = null;
 
 // Event Listeners
 urlInput.addEventListener('input', handleUrlInput);
@@ -40,8 +52,17 @@ urlInput.addEventListener('keypress', (e) => {
 previewBtn.addEventListener('click', handlePreview);
 convertBtn.addEventListener('click', handleConvert);
 downloadBtn.addEventListener('click', handleDownload);
+readBtn.addEventListener('click', handleRead);
 newConversionBtn.addEventListener('click', resetUI);
 retryBtn.addEventListener('click', resetUI);
+closeReaderBtn.addEventListener('click', closeReader);
+prevBtn.addEventListener('click', () => rendition && rendition.prev());
+nextBtn.addEventListener('click', () => rendition && rendition.next());
+tocSelect.addEventListener('change', (e) => {
+    if (rendition && e.target.value) {
+        rendition.display(e.target.value);
+    }
+});
 
 // Handlers
 function handleUrlInput() {
@@ -151,6 +172,102 @@ function handleDownload() {
     window.location.href = `/api/v1/convert/${currentJobId}/download`;
 }
 
+async function handleRead() {
+    if (!currentJobId) return;
+
+    try {
+        // Fetch the EPUB file
+        const response = await fetch(`/api/v1/convert/${currentJobId}/download`);
+        if (!response.ok) {
+            throw new Error('Failed to load EPUB');
+        }
+
+        const blob = await response.blob();
+        const arrayBuffer = await blob.arrayBuffer();
+
+        // Initialize epub.js
+        book = ePub(arrayBuffer);
+
+        // Clear previous content
+        readerContent.innerHTML = '';
+
+        // Render the book
+        rendition = book.renderTo(readerContent, {
+            width: '100%',
+            height: '100%',
+            spread: 'none'
+        });
+
+        // Display first page
+        await rendition.display();
+
+        // Load table of contents
+        const toc = await book.loaded.navigation;
+        populateTOC(toc.toc);
+
+        // Get book title
+        const metadata = await book.loaded.metadata;
+        readerTitle.textContent = metadata.title || 'EPUB Reader';
+
+        // Show reader modal
+        readerModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+        // Handle keyboard navigation
+        document.addEventListener('keydown', handleReaderKeydown);
+
+    } catch (error) {
+        console.error('Error loading EPUB:', error);
+        showError('Failed to open EPUB for reading: ' + error.message);
+    }
+}
+
+function populateTOC(toc) {
+    tocSelect.innerHTML = '<option value="">-- Select Chapter --</option>';
+
+    function addItems(items, indent = 0) {
+        items.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.href;
+            option.textContent = '  '.repeat(indent) + item.label;
+            tocSelect.appendChild(option);
+
+            if (item.subitems && item.subitems.length > 0) {
+                addItems(item.subitems, indent + 1);
+            }
+        });
+    }
+
+    addItems(toc);
+}
+
+function handleReaderKeydown(e) {
+    if (readerModal.classList.contains('hidden')) return;
+
+    if (e.key === 'ArrowLeft') {
+        rendition && rendition.prev();
+    } else if (e.key === 'ArrowRight') {
+        rendition && rendition.next();
+    } else if (e.key === 'Escape') {
+        closeReader();
+    }
+}
+
+function closeReader() {
+    readerModal.classList.add('hidden');
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', handleReaderKeydown);
+
+    if (rendition) {
+        rendition.destroy();
+        rendition = null;
+    }
+    if (book) {
+        book.destroy();
+        book = null;
+    }
+}
+
 // UI Functions
 function showPreview(data) {
     previewThumbnail.src = data.thumbnail_url || '';
@@ -198,6 +315,7 @@ function hideAllSections() {
 
 function resetUI() {
     hideAllSections();
+    closeReader();
     urlInput.value = '';
     urlInput.disabled = false;
     previewBtn.disabled = true;

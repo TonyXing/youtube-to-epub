@@ -36,7 +36,7 @@ def create_epub(processed_video: ProcessedVideo) -> Path:
         uid="style",
         file_name="style/styles.css",
         media_type="text/css",
-        content=css_content,
+        content=css_content.encode('utf-8'),
     )
     book.add_item(css)
 
@@ -106,7 +106,7 @@ def _create_cover_chapter(processed_video: ProcessedVideo, css: epub.EpubItem) -
         file_name="cover.xhtml",
         lang="en",
     )
-    chapter.content = content
+    chapter.set_content(content.encode('utf-8'))
     chapter.add_item(css)
 
     return chapter
@@ -172,7 +172,7 @@ def _create_summary_chapter(processed_video: ProcessedVideo, css: epub.EpubItem)
         file_name="summary.xhtml",
         lang="en",
     )
-    chapter.content = content
+    chapter.set_content(content.encode('utf-8'))
     chapter.add_item(css)
 
     return chapter
@@ -240,7 +240,7 @@ def _create_content_chapter(
         file_name=f"chapter_{index + 1}.xhtml",
         lang="en",
     )
-    epub_chapter.content = content
+    epub_chapter.set_content(content.encode('utf-8'))
     epub_chapter.add_item(css)
 
     return epub_chapter

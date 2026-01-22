@@ -235,8 +235,21 @@ h1 {
     color: #fff;
 }
 
-#download-btn {
-    margin-bottom: 1rem;
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.btn-text {
+    background: transparent;
+    color: #8892a0;
+    padding: 0.75rem 1.5rem;
+}
+
+.btn-text:hover {
+    color: #fff;
 }
 
 /* Error Section */
@@ -312,4 +325,114 @@ footer {
     .preview-info .meta {
         justify-content: center;
     }
+}
+
+/* Reader Modal */
+.reader-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0f1419;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.reader-modal.hidden {
+    display: none !important;
+}
+
+.reader-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #1e2a3a;
+    border-bottom: 1px solid #2d3748;
+}
+
+.reader-header h2 {
+    font-size: 1.25rem;
+    color: #fff;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80%;
+}
+
+.btn-close {
+    background: transparent;
+    border: none;
+    color: #8892a0;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.btn-close:hover {
+    color: #ff6b6b;
+}
+
+.reader-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 2rem;
+    background: #1a2332;
+    border-bottom: 1px solid #2d3748;
+}
+
+.btn-nav {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    background: #2d3748;
+    color: #e0e0e0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-nav:hover {
+    background: #3d4a5e;
+}
+
+.btn-nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.toc-select {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    background: #2d3748;
+    color: #e0e0e0;
+    border: 1px solid #3d4a5e;
+    border-radius: 8px;
+    max-width: 400px;
+    cursor: pointer;
+}
+
+.toc-select:focus {
+    outline: none;
+    border-color: #ff6b6b;
+}
+
+.reader-content {
+    flex: 1;
+    overflow: auto;
+    background: #fff;
+    color: #1a1a1a;
+}
+
+.reader-content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
 }

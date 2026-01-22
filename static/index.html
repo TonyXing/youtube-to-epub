@@ -63,8 +63,11 @@
                     <span class="success-icon">&#10003;</span>
                     <p>Your EPUB is ready!</p>
                 </div>
-                <button id="download-btn" class="btn btn-primary btn-large">Download EPUB</button>
-                <button id="new-conversion-btn" class="btn btn-secondary">Convert Another Video</button>
+                <div class="action-buttons">
+                    <button id="read-btn" class="btn btn-primary btn-large">Read Online</button>
+                    <button id="download-btn" class="btn btn-secondary btn-large">Download EPUB</button>
+                </div>
+                <button id="new-conversion-btn" class="btn btn-text">Convert Another Video</button>
             </section>
 
             <!-- Error Section -->
@@ -78,10 +81,26 @@
         </main>
 
         <footer>
-            <p>Powered by OpenAI GPT-4o-mini</p>
+            <p>Powered by Azure OpenAI</p>
         </footer>
     </div>
 
+    <!-- Reader Modal -->
+    <div id="reader-modal" class="reader-modal hidden">
+        <div class="reader-header">
+            <h2 id="reader-title">Reading...</h2>
+            <button id="close-reader-btn" class="btn-close">&times;</button>
+        </div>
+        <div class="reader-nav">
+            <button id="prev-btn" class="btn btn-nav">&larr; Previous</button>
+            <select id="toc-select" class="toc-select"></select>
+            <button id="next-btn" class="btn btn-nav">Next &rarr;</button>
+        </div>
+        <div id="reader-content" class="reader-content"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
     <script src="/static/app.js"></script>
 </body>
 </html>

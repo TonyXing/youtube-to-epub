@@ -1,9 +1,24 @@
 import json
-from openai import AsyncOpenAI
+from openai import AsyncAzureOpenAI
 
-from app.config import OPENAI_API_KEY, OPENAI_MODEL, SHORT_VIDEO_THRESHOLD_MINUTES
+from app.config import (
+    AZURE_OPENAI_ENDPOINT,
+    AZURE_OPENAI_API_KEY,
+    AZURE_OPENAI_DEPLOYMENT,
+    AZURE_OPENAI_API_VERSION,
+    SHORT_VIDEO_THRESHOLD_MINUTES,
+)
 from app.models.schemas import VideoMetadata, VideoChapter, TranscriptSegment
 from app.services.youtube_service import get_transcript_for_timerange, get_transcript_text
+
+
+def get_azure_client() -> AsyncAzureOpenAI:
+    """Create Azure OpenAI client."""
+    return AsyncAzureOpenAI(
+        azure_endpoint=AZURE_OPENAI_ENDPOINT,
+        api_key=AZURE_OPENAI_API_KEY,
+        api_version=AZURE_OPENAI_API_VERSION,
+    )
 
 
 async def detect_chapters(
@@ -57,7 +72,7 @@ async def ai_segment_chapters(
     full_transcript: str,
 ) -> list[VideoChapter]:
     """Use AI to segment a long video into logical chapters."""
-    client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+    client = get_azure_client()
 
     # Truncate transcript if too long for context
     max_chars = 30000
@@ -85,7 +100,7 @@ Respond with ONLY a JSON array in this exact format:
 
     try:
         response = await client.chat.completions.create(
-            model=OPENAI_MODEL,
+            model=AZURE_OPENAI_DEPLOYMENT,
             messages=[
                 {"role": "system", "content": "You are a helpful assistant that analyzes video transcripts and identifies logical chapter breaks. Respond only with valid JSON."},
                 {"role": "user", "content": prompt},
