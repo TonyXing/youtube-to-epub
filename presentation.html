@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube to EPUB Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+    <style>
+        .reveal h1, .reveal h2, .reveal h3 { text-transform: none; }
+        .reveal h1 { font-size: 2.5em; }
+        .reveal h2 { font-size: 1.8em; }
+        .reveal ul { display: block; text-align: left; }
+        .reveal li { margin: 0.5em 0; }
+        .gradient-text {
+            background: linear-gradient(90deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .tech-badge {
+            display: inline-block;
+            padding: 0.3em 0.8em;
+            margin: 0.2em;
+            background: #2d3748;
+            border-radius: 20px;
+            font-size: 0.7em;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1em;
+            text-align: left;
+        }
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1em;
+            border-radius: 10px;
+        }
+        .feature-item h4 {
+            color: #feca57;
+            margin-bottom: 0.5em;
+        }
+        .workflow-step {
+            display: inline-block;
+            padding: 0.5em 1em;
+            margin: 0.3em;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            border-radius: 8px;
+        }
+        .arrow { color: #feca57; margin: 0 0.5em; }
+        .code-block {
+            background: #1e1e1e;
+            padding: 1em;
+            border-radius: 8px;
+            text-align: left;
+            font-family: monospace;
+            font-size: 0.6em;
+        }
+        .highlight { color: #feca57; }
+        .small { font-size: 0.6em; color: #888; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Title Slide -->
+            <section>
+                <h1 class="gradient-text">YouTube to EPUB Converter</h1>
+                <p>Transform YouTube videos into readable EPUB books with AI-powered summaries</p>
+                <div style="margin-top: 2em;">
+                    <span class="tech-badge">Python</span>
+                    <span class="tech-badge">FastAPI</span>
+                    <span class="tech-badge">Azure OpenAI</span>
+                    <span class="tech-badge">epub.js</span>
+                </div>
+            </section>
+
+            <!-- Problem Statement -->
+            <section>
+                <h2>The Problem</h2>
+                <ul>
+                    <li>YouTube videos contain valuable information</li>
+                    <li>Watching takes time - hard to skim or search</li>
+                    <li>No offline reading experience</li>
+                    <li>Difficult to reference specific content later</li>
+                </ul>
+            </section>
+
+            <!-- Solution -->
+            <section>
+                <h2>The Solution</h2>
+                <p style="font-size: 1.3em;">Convert any YouTube video to a <span class="highlight">well-structured EPUB</span> with:</p>
+                <ul>
+                    <li>AI-generated summaries</li>
+                    <li>Organized chapters</li>
+                    <li>Full searchable transcript</li>
+                    <li>Read anywhere - online or offline</li>
+                </ul>
+            </section>
+
+            <!-- Key Features -->
+            <section>
+                <h2>Key Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h4>Smart Chapters</h4>
+                        <p>Uses video chapters or AI segmentation</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>AI Summaries</h4>
+                        <p>Overview + key takeaways per chapter</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>In-Browser Reader</h4>
+                        <p>Read instantly without downloading</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Real-time Progress</h4>
+                        <p>Live updates during conversion</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section>
+                <h2>How It Works</h2>
+                <div style="margin: 1em 0;">
+                    <span class="workflow-step">Paste URL</span>
+                    <span class="arrow">&rarr;</span>
+                    <span class="workflow-step">Preview</span>
+                    <span class="arrow">&rarr;</span>
+                    <span class="workflow-step">Convert</span>
+                    <span class="arrow">&rarr;</span>
+                    <span class="workflow-step">Read/Download</span>
+                </div>
+                <p class="small" style="margin-top: 2em;">Supports youtube.com, youtu.be, and embed links</p>
+            </section>
+
+            <!-- Architecture -->
+            <section>
+                <h2>Architecture</h2>
+                <div class="code-block">
+<pre>
+YouTube URL
+    │
+    ▼
+┌─────────────────────────────────────────┐
+│  <span class="highlight">FastAPI Backend</span>                        │
+│  ├── youtube-transcript-api (transcript)│
+│  ├── pytubefix (metadata & chapters)    │
+│  ├── Azure OpenAI (AI summaries)        │
+│  └── EbookLib (EPUB generation)         │
+└─────────────────────────────────────────┘
+    │
+    ▼
+EPUB File + In-Browser Reader (epub.js)
+</pre>
+                </div>
+            </section>
+
+            <!-- EPUB Structure -->
+            <section>
+                <h2>EPUB Structure</h2>
+                <div class="code-block">
+<pre>
+Video Title.epub
+├── <span class="highlight">Cover Page</span>
+│   └── Title, Channel, Duration
+├── <span class="highlight">Summary</span>
+│   ├── Overview (2-3 paragraphs)
+│   ├── Key Takeaways (bullets)
+│   └── Video Information
+└── <span class="highlight">Chapters</span>
+    ├── Chapter Summary
+    ├── Timestamp
+    └── Full Transcript
+</pre>
+                </div>
+            </section>
+
+            <!-- Tech Stack Details -->
+            <section>
+                <h2>Tech Stack</h2>
+                <ul>
+                    <li><strong>Backend:</strong> Python 3.10+, FastAPI, Uvicorn</li>
+                    <li><strong>AI:</strong> Azure OpenAI (GPT-4o-mini)</li>
+                    <li><strong>YouTube:</strong> youtube-transcript-api, pytubefix</li>
+                    <li><strong>EPUB:</strong> EbookLib (generation), epub.js (reader)</li>
+                    <li><strong>Frontend:</strong> Vanilla HTML/CSS/JS</li>
+                    <li><strong>Streaming:</strong> Server-Sent Events (SSE)</li>
+                </ul>
+            </section>
+
+            <!-- Demo -->
+            <section>
+                <h2>Demo</h2>
+                <p style="font-size: 1.5em;">
+                    <a href="http://localhost:8000" target="_blank" style="color: #feca57;">
+                        localhost:8000
+                    </a>
+                </p>
+                <p class="small">Start with: <code>python run.py</code></p>
+            </section>
+
+            <!-- Quick Setup -->
+            <section>
+                <h2>Quick Setup</h2>
+                <div class="code-block">
+<pre>
+# Clone & install
+git clone https://github.com/TonyXing/youtube-to-epub.git
+cd youtube-to-epub
+pip install -r requirements.txt
+
+# Configure Azure OpenAI
+cp .env.example .env
+# Edit .env with your credentials
+
+# Run
+python run.py
+</pre>
+                </div>
+            </section>
+
+            <!-- Future Ideas -->
+            <section>
+                <h2>Future Enhancements</h2>
+                <ul>
+                    <li>Support for playlists</li>
+                    <li>Multiple language support</li>
+                    <li>Custom styling options</li>
+                    <li>PDF export</li>
+                    <li>Batch processing</li>
+                </ul>
+            </section>
+
+            <!-- Thank You -->
+            <section>
+                <h1 class="gradient-text">Thank You!</h1>
+                <p style="margin-top: 1em;">
+                    <a href="https://github.com/TonyXing/youtube-to-epub" style="color: #feca57;">
+                        github.com/TonyXing/youtube-to-epub
+                    </a>
+                </p>
+                <p class="small" style="margin-top: 2em;">
+                    Built with FastAPI + Azure OpenAI
+                </p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            backgroundTransition: 'fade'
+        });
+    </script>
+</body>
+</html>
